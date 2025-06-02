@@ -25,10 +25,12 @@ class SkillResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->unique()
                     ->maxLength(255),
 
                 Forms\Components\FileUpload::make('icon')
                     ->image()
+                    ->required()
                     ->imagePreviewHeight('100')
                     ->directory('skills/icons')
                     ->disk('public'),

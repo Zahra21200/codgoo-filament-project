@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SliderResource\Pages;
 use App\Filament\Resources\SliderResource\RelationManagers;
+use App\Models\Product;
 use App\Models\Slider;
 use Filament\Forms;
 use Filament\Forms\Form;

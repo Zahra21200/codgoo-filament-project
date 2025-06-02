@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers;
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\Project;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -18,6 +20,12 @@ class ProjectResource extends Resource
     protected static ?string $model = Project::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    // public static function mutateFormDataBeforeCreate(array $data): array
+    // {
+    //     $data['created_by_type'] = \App\Models\Client::class;
+    //     return $data;
+    // }
 
     public static function form(Form $form): Form
     {
@@ -58,17 +66,23 @@ class ProjectResource extends Resource
                 ->searchable()
                 ->nullable(),
 
-        
+
 
             Forms\Components\MultiSelect::make('addons')
                 ->relationship('addons', 'name')
                 ->preload(),
 
-            Forms\Components\TextInput::make('created_by_type')
-                ->disabled(),
+                // Forms\Components\Select::make('created_by_id')
+                // ->label('Client')
+                // ->options(\App\Models\Client::all()->pluck('name', 'id')->toArray())
+                // ->searchable()
+                // ->required(),
+            
+            // Forms\Components\TextInput::make('created_by_type')
+            //     ->disabled(),
 
-            Forms\Components\TextInput::make('created_by_id')
-                ->disabled(),
+            // Forms\Components\TextInput::make('created_by_id')
+            //     ->disabled(),
         ]);
     }
 
@@ -81,14 +95,24 @@ class ProjectResource extends Resource
                 ->searchable()
                 ->sortable(),
 
-            Tables\Columns\TextColumn::make('status')
-                ->sortable()
-                ->enum([
+                Tables\Columns\TextColumn::make('status')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'requested' => 'gray',
+                    'ongoing' => 'info',
+                    'completed' => 'success',
+                    'reject' => 'danger',
+                    default => 'secondary',
+                })
+                ->formatStateUsing(fn (string $state): string => match ($state) {
                     'requested' => 'Requested',
                     'ongoing' => 'Ongoing',
                     'completed' => 'Completed',
-                    'reject' => 'Reject',
-                ]),
+                    'reject' => 'Rejected',
+                    default => ucfirst($state),
+                })
+                ->sortable(),
+            
 
             Tables\Columns\TextColumn::make('price')
                 ->money('usd', true)

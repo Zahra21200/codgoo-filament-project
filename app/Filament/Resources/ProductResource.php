@@ -38,6 +38,14 @@ class ProductResource extends Resource
                 Forms\Components\Textarea::make('note')
                     ->rows(2)
                     ->required(),
+                    Forms\Components\Select::make('addons')
+                    ->label('Addons')
+                    ->relationship('addons', 'name') 
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
+                    ->columnSpanFull(),
+                
 
             ]);
     }

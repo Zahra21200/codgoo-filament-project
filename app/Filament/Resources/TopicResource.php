@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enum\SectionEnum;
 use App\Filament\Resources\TopicResource\Pages;
 use App\Filament\Resources\TopicResource\RelationManagers;
 use App\Models\Topic;
@@ -24,7 +25,7 @@ class TopicResource extends Resource
         return $form->schema([
             Forms\Components\Select::make('section_id')
                 ->label('Section')
-                ->options(SectionEnum::toSelectArray()) 
+                ->options(SectionEnum::toSelectArray())
                 ->required(),
 
             Forms\Components\TextInput::make('header')

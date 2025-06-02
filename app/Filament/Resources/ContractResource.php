@@ -70,19 +70,22 @@ class ContractResource extends Resource
                 ->url(fn ($record) => asset('storage/' . $record->file_path))
                 ->openUrlInNewTab(),
 
-            Tables\Columns\BadgeColumn::make('status')
-                ->enum([
-                    'not_signed' => 'Not Signed',
-                    'signed' => 'Signed',
-                ])
+                Tables\Columns\BadgeColumn::make('status')
                 ->colors([
                     'warning' => 'not_signed',
                     'success' => 'signed',
                 ])
+                ->formatStateUsing(fn (string $state): string => match ($state) {
+                    'not_signed' => 'Not Signed',
+                    'signed' => 'Signed',
+                    default => ucfirst($state),
+                })
                 ->sortable(),
-
-            Tables\Columns\TextColumn::make('signed_at')->dateTime()->sortable()->nullable(),
-
+            
+                Tables\Columns\TextColumn::make('signed_at')
+                ->dateTime()
+                ->sortable(),
+            
             Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable(),
         ])
         ->filters([

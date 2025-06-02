@@ -33,7 +33,7 @@ class MeetingResource extends Resource
 
             Forms\Components\Select::make('slot_id')
                 ->label('Available Slot')
-                ->options(AvailableSlot::all()->pluck('label', 'id')->toArray())
+                ->options(AvailableSlot::all()->pluck('date', 'id')->toArray())
                 ->searchable()
                 ->required(),
 
@@ -85,10 +85,10 @@ class MeetingResource extends Resource
 
             Tables\Columns\TextColumn::make('slot.label')->label('Slot')->sortable()->searchable(),
 
-            Tables\Columns\TextColumn::make('jitsi_url')
-                ->label('Jitsi URL')
-                ->url()
-                ->openUrlInNewTab(),
+//            Tables\Columns\TextColumn::make('jitsi_url')
+//                ->label('Jitsi URL')
+//                ->url()
+//                ->openUrlInNewTab(),
 
             Tables\Columns\TextColumn::make('start_time')->label('Start Time')->sortable(),
 

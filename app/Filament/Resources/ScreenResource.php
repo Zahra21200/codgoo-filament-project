@@ -6,6 +6,9 @@ use App\Filament\Resources\ScreenResource\Pages;
 use App\Filament\Resources\ScreenResource\RelationManagers;
 use App\Models\Screen;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -41,20 +44,61 @@ class ScreenResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id')->sortable(),
+
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('task.label')
+                    ->label('Task')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\IconColumn::make('dev_mode')
+                    ->boolean()
+                    ->label('Development Mode')
+                    ->sortable(),
+
+                Tables\Columns\IconColumn::make('implemented')
+                    ->boolean()
+                    ->sortable(),
+
+                Tables\Columns\IconColumn::make('integrated')
+                    ->boolean()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('screen_code')
+                    ->label('Screen Code')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('estimated_hours')
+                    ->label('Estimated Hours')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('dev_mode')
+                    ->label('Development Mode')
+                    ->query(fn ($query) => $query->where('dev_mode', true)),
+
+                Tables\Filters\Filter::make('implemented')
+                    ->query(fn ($query) => $query->where('implemented', true)),
+
+                Tables\Filters\Filter::make('integrated')
+                    ->query(fn ($query) => $query->where('integrated', true)),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
+
 
     public static function getRelations(): array
     {

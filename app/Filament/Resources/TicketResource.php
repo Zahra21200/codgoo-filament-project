@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TicketResource\Pages;
 use App\Filament\Resources\TicketResource\RelationManagers;
+use App\Models\Client;
+use App\Models\Department;
 use App\Models\Ticket;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -88,15 +90,18 @@ class TicketResource extends Resource
                 ->label('Client ID')
                 ->sortable(),
 
-            Tables\Columns\TextColumn::make('status')
-                ->sortable()
-                ->enum([
-                    'pending' => 'Pending',
-                    'open' => 'Open',
-                    'closed' => 'Closed',
-                    'answered' => 'Answered',
-                ])
+                Tables\Columns\TextColumn::make('status')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'pending' => 'gray',
+                    'open' => 'info',
+                    'answered' => 'warning',
+                    'closed' => 'success',
+                    default => 'secondary',
+                })
+                ->formatStateUsing(fn (string $state): string => ucfirst($state))
                 ->sortable(),
+            
 
             Tables\Columns\IconColumn::make('attachment')
                 ->label('Has Attachment')

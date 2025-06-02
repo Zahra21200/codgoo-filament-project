@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\MilestoneResource\Pages;
 use App\Filament\Resources\MilestoneResource\RelationManagers;
 use App\Models\Milestone;
+use App\Models\Project;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -50,7 +51,7 @@ class MilestoneResource extends Resource
                 ->required(false),
 
             Forms\Components\DatePicker::make('end_date')
-                ->disabled(), 
+                ->disabled(),
 
             Forms\Components\Select::make('status')
                 ->options([
@@ -82,20 +83,22 @@ class MilestoneResource extends Resource
             Tables\Columns\TextColumn::make('end_date')->date()->sortable(),
 
             Tables\Columns\BadgeColumn::make('status')
-                ->enum([
-                    'not_started' => 'Not Started',
-                    'in_progress' => 'In Progress',
-                    'completed' => 'Completed',
-                    'canceled' => 'Canceled',
-                ])
-                ->colors([
-                    'primary' => 'not_started',
-                    'warning' => 'in_progress',
-                    'success' => 'completed',
-                    'danger' => 'canceled',
-                ])
-                ->sortable(),
-                
+                    ->formatStateUsing(fn ($state) => match ($state) {
+                        'not_started' => 'Not Started',
+                        'in_progress' => 'In Progress',
+                        'completed' => 'Completed',
+                        'canceled' => 'Canceled',
+                        default => $state,
+                    })
+                    ->colors([
+                        'primary' => 'not_started',
+                        'warning' => 'in_progress',
+                        'success' => 'completed',
+                        'danger' => 'canceled',
+                    ])
+                    ->sortable(),
+
+
             Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable(),
         ])
         ->filters([

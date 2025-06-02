@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Spatie\Translatable\HasTranslations;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -36,15 +35,15 @@ class Employee extends Authenticatable implements JWTSubject
 
     public function skills()
     {
-        return $this->belongsToMany(Skill::class, 'employee_skill', 'employee_id', 'skill_id');
+        return $this->belongsToMany(Skill::class, 'employee_skills', 'employee_id', 'skill_id');
     }
 
 
     public function getJWTIdentifier()
     {
-        return (string) $this->getKey();  
+        return (string) $this->getKey();
     }
-    
+
 
     public function getJWTCustomClaims()
     {
@@ -62,6 +61,6 @@ class Employee extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(Address::class, 'employee_id');
     }
-    
+
 }
 

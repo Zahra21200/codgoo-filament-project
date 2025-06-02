@@ -5,6 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\InvoiceResource\Pages;
 use App\Filament\Resources\InvoiceResource\RelationManagers;
 use App\Models\Invoice;
+use App\Models\Milestone;
+use App\Models\Project;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -79,23 +81,38 @@ class InvoiceResource extends Resource
 
             Tables\Columns\TextColumn::make('project.name')->label('Project')->sortable()->searchable(),
 
-            Tables\Columns\BadgeColumn::make('status')
-                ->enum([
-                    'paid' => 'Paid',
-                    'unpaid' => 'Unpaid',
-                ])
-                ->colors([
-                    'success' => 'paid',
-                    'danger' => 'unpaid',
-                ])
+            Tables\Columns\TextColumn::make('status')
+                ->label('Status')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'not_signed' => 'warning',
+                    'signed' => 'success',
+                    default => 'gray',
+                })
+                ->formatStateUsing(fn (string $state): string => match ($state) {
+                    'not_signed' => 'Not Signed',
+                    'signed' => 'Signed',
+                    default => ucfirst($state),
+                })
                 ->sortable(),
 
-            Tables\Columns\TextColumn::make('payment_method')
-                ->sortable()
-                ->enum([
+
+
+                Tables\Columns\TextColumn::make('payment_method')
+                ->label('Payment Method')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'bank_transfer' => 'warning',
+                    'online' => 'success',
+                    default => 'gray',
+                })
+                ->formatStateUsing(fn (string $state): string => match ($state) {
                     'bank_transfer' => 'Bank Transfer',
                     'online' => 'Online',
-                ]),
+                    default => ucfirst($state),
+                })
+                ->sortable(),
+            
 
             Tables\Columns\TextColumn::make('due_date')->date()->sortable(),
 
